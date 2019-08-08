@@ -7,7 +7,7 @@ You need to make sure that elm 0.19.0 version is install, if it's not just type 
 npm install -g elm@0.19.0
 ```
 
-At the root of the repository, type the command bellow, this will install the elm dependencies:  
+At the root of the repository, type the command bellow, it will install elm dependencies:  
 ```sh
 elm make
 ```
