@@ -145,7 +145,7 @@ answerQuestion oldState answer =
 
 view : Model -> Html Msg
 view model =
-    div [ class "text-center" ]
+    div [ class "text-center", style "position" "absolute", style "top" "40%", style "left" "50%", style "transform" "translate(-50%, -50%)" ]
         [ stylesheet
         , case model.game of
             Loading ->
@@ -173,7 +173,7 @@ viewResults answersList =
             |> div []
 
 viewResult : AnsweredQuestions -> Html Msg
-viewResult{ question, answer } =
+viewResult { question, answer } =
     if question.correctAnswer == answer then
         div [class "text-success"]
             [text (question.label ++ " " ++ answer)]
