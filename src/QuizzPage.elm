@@ -7,6 +7,7 @@ import Bootstrap.CDN exposing (stylesheet)
 import Html.Events exposing (..)
 import Http exposing (expectJson)
 import Json.Decode as Decode exposing (Decoder, Value)
+import Maybe exposing (Maybe(..))
 import Random exposing (Generator)
 import Random.List
 import Random.Extra
@@ -22,6 +23,7 @@ type alias Question =
 type alias Model =
     {
     game : Game
+    , difficulty : String
     }
 
 type Game =
@@ -48,20 +50,19 @@ type Msg =
     | AnswerShuffled (List Question)
     | QuestionReceived (Result Http.Error (List Question))
 
-initialModel : Model
-initialModel =
+initialModel : String -> Model
+initialModel difficulty =
         {
         game = Loading
+        , difficulty = difficulty
         }
 
 init : String -> (Model, Cmd Msg)
 init arg =
-        Debug.log "ICI"
-        Debug.log arg
-        (initialModel, getQuestion arg)
+        (initialModel arg, getQuestion arg)
 
 getQuestion : String -> Cmd Msg
-getQuestion arg=
+getQuestion arg =
     Http.get
     {
     url = "https://opentdb.com/api.php?amount=5&difficulty=" ++ arg ++ "&type=multiple"
@@ -155,13 +156,21 @@ view model =
             Loaded gameState ->
                     viewQuestion gameState.currentQuestion
             Result answersList ->
-                viewResults answersList
+                mainResultsView model answersList
+        ]
+
+mainResultsView : Model -> List AnsweredQuestions -> Html Msg
+mainResultsView model list =
+        div [] [
+            viewResults list
+            , a [class "btn btn-primary mr-2", href ("/quiz?q=" ++ model.difficulty)] [ text "Replay" ]
+            , a [class "btn btn-primary mr-2", href "/"] [ text "Home" ]
         ]
 
 viewResults : List AnsweredQuestions -> Html Msg
 viewResults answersList =
-    List.map viewResult answersList
-        |> div []
+        List.map viewResult answersList
+            |> div []
 
 viewResult : AnsweredQuestions -> Html Msg
 viewResult{ question, answer } =
