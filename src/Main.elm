@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser exposing (Document, UrlRequest(..))
-import Browser.Navigation as Navigation exposing (Key)
+import Browser.Navigation as Navigation exposing (Key, replaceUrl)
 import Categories
 import Home
 import Html
@@ -42,7 +42,11 @@ type Msg =
 
 init : Value -> Url -> Key -> (Model, Cmd Msg)
 init _ url key =
-    ( Model key HomePage, Cmd.none )
+    let
+        homeCmd =
+            replaceUrl key "/home"
+    in
+        ( Model key HomePage, homeCmd )
 
 view : Model -> Document Msg
 view model =
@@ -64,6 +68,7 @@ parseUrlToRoute url =
         oneOf
         [
             Parser.map HomeRoute top
+            , Parser.map HomeRoute (s "home")
             , Parser.map QuizRoute (s "quiz" <?> Query.string "q")
             , Parser.map CategorieRoute (s "categories")
         ]

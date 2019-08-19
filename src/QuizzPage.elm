@@ -164,7 +164,7 @@ mainResultsView model list =
         div [] [
             viewResults list
             , a [class "btn btn-primary mr-2", href ("/quiz?q=" ++ model.difficulty)] [ text "Replay" ]
-            , a [class "btn btn-primary mr-2", href "/"] [ text "Home" ]
+            , a [class "btn btn-primary mr-2", href "/home"] [ text "Home" ]
         ]
 
 viewResults : List AnsweredQuestions -> Html Msg
